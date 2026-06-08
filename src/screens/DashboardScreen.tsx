@@ -60,7 +60,6 @@ export function DashboardScreen({ navigation }: Props) {
           schedule={plan.schedule}
           originalPrincipal={plan.originalPrincipal}
           color={accent}
-          width={300}
         />
       </Card>
 

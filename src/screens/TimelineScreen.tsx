@@ -52,7 +52,6 @@ export function TimelineScreen({ navigation }: Props) {
           schedule={plan.schedule}
           originalPrincipal={plan.originalPrincipal}
           color={accent}
-          width={300}
           height={200}
         />
         <Text style={styles.subtle}>

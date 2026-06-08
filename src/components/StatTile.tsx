@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.md,
     padding: spacing.md,
-    minWidth: 120,
+    minWidth: 0,
   },
   label: {
     color: colors.textMuted,
