@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { colors, font, radius, spacing } from '../theme';
 import { StrategyType } from '../types';
 
@@ -14,8 +14,11 @@ const OPTIONS: { key: StrategyType; label: string; hint: string }[] = [
 ];
 
 export function StrategyToggle({ value, onChange }: Props) {
+  const { width } = useWindowDimensions();
+  const stacked = width < 360;
+
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, stacked && styles.rowStacked]}>
       {OPTIONS.map((opt) => {
         const active = value === opt.key;
         const accent = opt.key === 'snowball' ? colors.snowball : colors.avalanche;
@@ -25,7 +28,10 @@ export function StrategyToggle({ value, onChange }: Props) {
             onPress={() => onChange(opt.key)}
             style={[
               styles.option,
-              active && { borderColor: accent, backgroundColor: colors.surfaceAlt },
+              active && {
+                borderColor: accent,
+                backgroundColor: colors.surfaceAlt,
+              },
             ]}
           >
             <Text style={[styles.label, active && { color: accent }]}>{opt.label}</Text>
@@ -42,11 +48,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  rowStacked: {
+    flexDirection: 'column',
+  },
   option: {
     flex: 1,
     padding: spacing.md,
     borderRadius: radius.md,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
   },
@@ -58,6 +67,7 @@ const styles = StyleSheet.create({
   hint: {
     color: colors.textMuted,
     fontSize: font.tiny,
+    lineHeight: 15,
     marginTop: 2,
   },
 });

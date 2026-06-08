@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: colors.surfaceAlt,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   fill: {
     height: '100%',

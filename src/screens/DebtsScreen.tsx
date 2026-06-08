@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -20,6 +20,8 @@ type Props = CompositeScreenProps<
 
 export function DebtsScreen({ navigation }: Props) {
   const { debts, settings, removeDebt, totalBalance } = useDebts();
+  const { width } = useWindowDimensions();
+  const compact = width < 380;
 
   if (debts.length === 0) {
     return (
@@ -64,14 +66,21 @@ export function DebtsScreen({ navigation }: Props) {
           settings.strategy === 'snowball' ? colors.snowball : colors.avalanche;
         return (
           <Card key={debt.id} style={{ gap: spacing.sm }}>
-            <View style={styles.debtHeader}>
+            <View style={[styles.debtHeader, compact && styles.debtHeaderStacked]}>
               <View style={styles.nameRow}>
                 <View style={[styles.orderBadge, { borderColor: accent }]}>
                   <Text style={[styles.orderText, { color: accent }]}>{index + 1}</Text>
                 </View>
                 <Text style={styles.debtName}>{debt.name}</Text>
               </View>
-              <Text style={styles.balance}>{formatCurrency(debt.balance)}</Text>
+              <Text
+                style={[styles.balance, compact && styles.balanceCompact]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.82}
+              >
+                {formatCurrency(debt.balance)}
+              </Text>
             </View>
 
             <View style={styles.metaRow}>
@@ -134,6 +143,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: spacing.sm,
+  },
+  debtHeaderStacked: {
+    alignItems: 'flex-start',
+    flexDirection: 'column',
   },
   nameRow: {
     flexDirection: 'row',
@@ -163,15 +177,22 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: font.h3,
     fontWeight: '800',
+    flexShrink: 0,
+  },
+  balanceCompact: {
+    alignSelf: 'stretch',
+    textAlign: 'left',
   },
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.lg,
   },
   meta: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: spacing.xs,
+    minWidth: 112,
   },
   metaLabel: {
     color: colors.textMuted,

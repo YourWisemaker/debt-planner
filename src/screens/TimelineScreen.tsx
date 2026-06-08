@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import type { StyleProp, TextStyle } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -23,6 +30,8 @@ const INITIAL_ROWS = 12;
 export function TimelineScreen({ navigation }: Props) {
   const { debts, plan, settings } = useDebts();
   const [expanded, setExpanded] = useState(false);
+  const { width } = useWindowDimensions();
+  const compact = width < 390;
 
   if (debts.length === 0) {
     return (
@@ -67,27 +76,53 @@ export function TimelineScreen({ navigation }: Props) {
 
       <Card style={{ gap: spacing.xs }}>
         <Text style={styles.cardLabel}>Month-by-month</Text>
-        <View style={styles.tableHead}>
-          <Text style={[styles.cell, styles.cellMonth, styles.headText]}>Month</Text>
-          <Text style={[styles.cell, styles.headText]}>Payment</Text>
-          <Text style={[styles.cell, styles.headText]}>Interest</Text>
-          <Text style={[styles.cell, styles.headText]}>Balance</Text>
-        </View>
+        {!compact ? (
+          <View style={styles.tableHead}>
+            <Text style={[styles.cell, styles.cellMonth, styles.headText]}>Month</Text>
+            <Text style={[styles.cell, styles.headText]}>Payment</Text>
+            <Text style={[styles.cell, styles.headText]}>Interest</Text>
+            <Text style={[styles.cell, styles.headText]}>Balance</Text>
+          </View>
+        ) : null}
 
         {rows.map((snap) => (
           <View key={snap.month}>
-            <View style={styles.tableRow}>
-              <Text style={[styles.cell, styles.cellMonth, styles.cellStrong]}>
-                {snap.label}
-              </Text>
-              <Text style={styles.cell}>{formatCurrency(snap.totalPayment)}</Text>
-              <Text style={[styles.cell, { color: colors.warning }]}>
-                {formatCurrency(snap.totalInterest)}
-              </Text>
-              <Text style={[styles.cell, styles.cellStrong]}>
-                {formatCurrency(snap.totalEndingBalance)}
-              </Text>
-            </View>
+            {compact ? (
+              <View style={styles.monthCard}>
+                <View style={styles.monthCardHead}>
+                  <Text style={styles.monthLabel}>{snap.label}</Text>
+                  <Text
+                    style={styles.monthBalance}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.82}
+                  >
+                    {formatCurrency(snap.totalEndingBalance)}
+                  </Text>
+                </View>
+                <View style={styles.monthMetrics}>
+                  <Metric label="Payment" value={formatCurrency(snap.totalPayment)} />
+                  <Metric
+                    label="Interest"
+                    value={formatCurrency(snap.totalInterest)}
+                    valueStyle={styles.metricWarning}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View style={styles.tableRow}>
+                <Text style={[styles.cell, styles.cellMonth, styles.cellStrong]}>
+                  {snap.label}
+                </Text>
+                <Text style={styles.cell}>{formatCurrency(snap.totalPayment)}</Text>
+                <Text style={[styles.cell, { color: colors.warning }]}>
+                  {formatCurrency(snap.totalInterest)}
+                </Text>
+                <Text style={[styles.cell, styles.cellStrong]}>
+                  {formatCurrency(snap.totalEndingBalance)}
+                </Text>
+              </View>
+            )}
             {snap.debtsPaidOffThisMonth.map((name) => (
               <Text key={name} style={styles.paidOff}>
                 ✓ Paid off {name}
@@ -107,6 +142,25 @@ export function TimelineScreen({ navigation }: Props) {
         ) : null}
       </Card>
     </Screen>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  valueStyle,
+}: {
+  label: string;
+  value: string;
+  valueStyle?: StyleProp<TextStyle>;
+}) {
+  return (
+    <View style={styles.metric}>
+      <Text style={styles.metricLabel}>{label}</Text>
+      <Text style={[styles.metricValue, valueStyle]} numberOfLines={1}>
+        {value}
+      </Text>
+    </View>
   );
 }
 
@@ -163,6 +217,55 @@ const styles = StyleSheet.create({
     fontSize: font.small,
     fontWeight: '600',
     paddingBottom: spacing.xs,
+  },
+  monthCard: {
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.md,
+    padding: spacing.sm,
+    marginTop: spacing.xs,
+    gap: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  monthCardHead: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    gap: spacing.sm,
+  },
+  monthLabel: {
+    color: colors.text,
+    fontSize: font.body,
+    fontWeight: '800',
+  },
+  monthBalance: {
+    color: colors.text,
+    fontSize: font.body,
+    fontWeight: '800',
+    flexShrink: 1,
+    textAlign: 'right',
+  },
+  monthMetrics: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  metric: {
+    flex: 1,
+  },
+  metricLabel: {
+    color: colors.textFaint,
+    fontSize: font.tiny,
+    textTransform: 'uppercase',
+    fontWeight: '700',
+  },
+  metricValue: {
+    color: colors.textMuted,
+    fontSize: font.small,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  metricWarning: {
+    color: colors.warning,
   },
   expandBtn: {
     alignItems: 'center',

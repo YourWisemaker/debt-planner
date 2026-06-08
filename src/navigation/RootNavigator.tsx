@@ -10,7 +10,7 @@ import { PlanScreen } from '../screens/PlanScreen';
 import { TimelineScreen } from '../screens/TimelineScreen';
 import { AddEditDebtScreen } from '../screens/AddEditDebtScreen';
 import { MilestonesScreen } from '../screens/MilestonesScreen';
-import { colors } from '../theme';
+import { colors, font, spacing } from '../theme';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -45,6 +45,14 @@ function Tabs() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
+          borderTopWidth: 1,
+          height: 64,
+          paddingTop: spacing.xs,
+          paddingBottom: spacing.sm,
+        },
+        tabBarLabelStyle: {
+          fontSize: font.tiny,
+          fontWeight: '700',
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textFaint,

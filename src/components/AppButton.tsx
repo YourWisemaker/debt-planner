@@ -33,7 +33,7 @@ export function AppButton({
   }[variant];
 
   const textColor =
-    variant === 'primary' || variant === 'danger' ? colors.background : colors.text;
+    variant === 'primary' || variant === 'danger' ? colors.surface : colors.text;
 
   return (
     <Pressable
@@ -42,6 +42,7 @@ export function AppButton({
       style={({ pressed }) => [
         styles.button,
         { backgroundColor: bg, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
+        variant === 'secondary' && styles.secondary,
         variant === 'ghost' && styles.ghost,
         style,
       ]}
@@ -49,7 +50,14 @@ export function AppButton({
       {loading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+        <Text
+          style={[styles.label, { color: textColor }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.82}
+        >
+          {label}
+        </Text>
       )}
     </Pressable>
   );
@@ -57,18 +65,25 @@ export function AppButton({
 
 const styles = StyleSheet.create({
   button: {
+    minHeight: 48,
     paddingVertical: spacing.md - 2,
     paddingHorizontal: spacing.lg,
     borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  secondary: {
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   ghost: {
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   label: {
     fontSize: font.body,
     fontWeight: '700',
+    textAlign: 'center',
   },
 });

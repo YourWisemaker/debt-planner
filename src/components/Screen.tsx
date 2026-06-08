@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing } from '../theme';
 
@@ -10,11 +10,20 @@ interface Props {
 
 export function Screen({ children, scroll = true }: Props) {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const horizontalPadding = width < 380 ? spacing.sm : spacing.md;
   const padTop = insets.top + spacing.md;
 
   if (!scroll) {
     return (
-      <View style={[styles.container, { paddingTop: padTop }]}>{children}</View>
+      <View
+        style={[
+          styles.container,
+          { paddingTop: padTop, paddingHorizontal: horizontalPadding },
+        ]}
+      >
+        {children}
+      </View>
     );
   }
 
@@ -23,7 +32,7 @@ export function Screen({ children, scroll = true }: Props) {
       style={styles.container}
       contentContainerStyle={{
         paddingTop: padTop,
-        paddingHorizontal: spacing.md,
+        paddingHorizontal: horizontalPadding,
         paddingBottom: spacing.xl,
         gap: spacing.md,
       }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -22,6 +22,8 @@ type Props = CompositeScreenProps<
 
 export function DashboardScreen({ navigation }: Props) {
   const { debts, plan, settings, totalBalance, totalMinimums } = useDebts();
+  const { width } = useWindowDimensions();
+  const compact = width < 380;
 
   if (debts.length === 0) {
     return (
@@ -63,7 +65,7 @@ export function DashboardScreen({ navigation }: Props) {
         />
       </Card>
 
-      <View style={styles.tiles}>
+      <View style={[styles.tiles, compact && styles.tilesStacked]}>
         <StatTile
           label="Debt-free in"
           value={formatDuration(plan.months)}
@@ -154,10 +156,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  tilesStacked: {
+    flexDirection: 'column',
+  },
   rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
   },
   strategyName: {
     fontSize: font.body,

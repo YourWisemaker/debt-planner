@@ -106,6 +106,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
   },
   itemTitle: {
     color: colors.text,
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
   itemMonth: {
     color: colors.textMuted,
     fontSize: font.small,
+    flexShrink: 0,
   },
   itemDesc: {
     color: colors.textMuted,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Screen } from '../components/Screen';
 import { Card } from '../components/Card';
 import { StrategyToggle } from '../components/StrategyToggle';
@@ -12,6 +12,8 @@ const PRESETS = [0, 50, 100, 200, 350, 500];
 
 export function PlanScreen() {
   const { debts, settings, setStrategy, setExtraPayment, plan, comparison } = useDebts();
+  const { width } = useWindowDimensions();
+  const compact = width < 380;
 
   if (debts.length === 0) {
     return (
@@ -86,7 +88,7 @@ export function PlanScreen() {
           Same {formatCurrency(settings.extraPayment)} extra, compared head to head.
         </Text>
 
-        <View style={styles.compareRow}>
+        <View style={[styles.compareRow, compact && styles.compareRowStacked]}>
           <CompareCol
             title="❄️ Snowball"
             color={colors.snowball}
@@ -211,6 +213,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: font.h1,
     fontWeight: '900',
+    textAlign: 'center',
   },
   amountSub: {
     color: colors.textMuted,
@@ -245,12 +248,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
   },
+  compareRowStacked: {
+    flexDirection: 'column',
+  },
   compareCol: {
     flex: 1,
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.md,
     padding: spacing.md,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   compareTitle: {
     fontSize: font.body,
@@ -261,6 +269,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: font.h3,
     fontWeight: '800',
+    textAlign: 'center',
   },
   compareInterestLabel: {
     color: colors.textFaint,
@@ -271,6 +280,7 @@ const styles = StyleSheet.create({
     color: colors.warning,
     fontSize: font.body,
     fontWeight: '700',
+    textAlign: 'center',
   },
   savingsBanner: {
     backgroundColor: colors.surfaceAlt,
@@ -278,6 +288,8 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderLeftWidth: 3,
     borderLeftColor: colors.success,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   savingsText: {
     color: colors.text,
@@ -287,6 +299,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: spacing.md,
     paddingVertical: spacing.xs,
   },
   rowLabel: {
@@ -297,5 +311,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: font.body,
     fontWeight: '700',
+    flexShrink: 1,
+    textAlign: 'right',
   },
 });

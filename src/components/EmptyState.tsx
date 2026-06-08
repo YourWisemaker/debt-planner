@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, font, spacing } from '../theme';
+import { colors, font, radius, spacing } from '../theme';
 import { AppButton } from './AppButton';
 
 interface Props {
@@ -14,7 +14,9 @@ interface Props {
 export function EmptyState({ emoji, title, message, actionLabel, onAction }: Props) {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.emoji}>{emoji}</Text>
+      <View style={styles.emojiBubble}>
+        <Text style={styles.emoji}>{emoji}</Text>
+      </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
       {actionLabel && onAction ? (
@@ -27,12 +29,22 @@ export function EmptyState({ emoji, title, message, actionLabel, onAction }: Pro
 const styles = StyleSheet.create({
   wrap: {
     alignItems: 'center',
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+  },
+  emojiBubble: {
+    width: 64,
+    height: 64,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceAlt,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   emoji: {
-    fontSize: 48,
-    marginBottom: spacing.sm,
+    fontSize: 34,
   },
   title: {
     color: colors.text,

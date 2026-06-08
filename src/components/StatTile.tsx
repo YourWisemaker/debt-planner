@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     padding: spacing.md,
     minWidth: 0,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   label: {
     color: colors.textMuted,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   caption: {
-    color: colors.textFaint,
+    color: colors.textMuted,
     fontSize: font.tiny,
     marginTop: 2,
   },

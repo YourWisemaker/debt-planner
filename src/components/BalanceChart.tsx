@@ -78,8 +78,10 @@ export function BalanceChart({
             <Circle cx={x(lastMonth)} cy={y(0)} r={4} fill={colors.success} />
           </Svg>
           <View style={styles.axis}>
-            <Text style={styles.axisText}>Today · {formatCurrency(originalPrincipal)}</Text>
-            <Text style={[styles.axisText, { color: colors.success }]}>Debt-free</Text>
+            <Text style={styles.axisText} numberOfLines={1}>
+              Today · {formatCurrency(originalPrincipal)}
+            </Text>
+            <Text style={[styles.axisText, styles.axisTextEnd]}>Debt-free</Text>
           </View>
         </>
       ) : (
@@ -112,5 +114,11 @@ const styles = StyleSheet.create({
   axisText: {
     color: colors.textMuted,
     fontSize: font.tiny,
+    flexShrink: 1,
+  },
+  axisTextEnd: {
+    color: colors.success,
+    textAlign: 'right',
+    marginLeft: spacing.sm,
   },
 });
